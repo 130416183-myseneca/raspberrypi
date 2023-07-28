@@ -146,8 +146,7 @@ def sendtransactiondata(maintopic,mainproducerid,VIPERPORT,index,preprocesstopic
 
     # preprocessconditions='arcturus-temperature_preprocessed_Diff >= now -1h'
      
-     preprocessconditions = 'arcturus-temperature_preprocessed_Diff.apply(lambda x: (x - arcturus-temperature_preprocessed_Diff.min()) / (arcturus-temperature_preprocessed_Diff.max() - arcturus-temperature_preprocessed_Diff.min()))'
-
+     preprocessconditions = 'diff,outliers,variance'
 
      
       # You can access these new preprocessed topics as:
