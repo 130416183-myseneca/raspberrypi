@@ -56,7 +56,7 @@ if VIPERHOST=="":
 #                                     CREATE TOPICS IN KAFKA
 
 # Set personal data
-def datasetup(maintopic,preprocesstopic):
+def datasetup(maintopic,preprocesstopic,):
      companyname="Seneca"
      myname="Patrick"
      myemail="pjbantigue@myseneca.ca"
@@ -108,6 +108,14 @@ def datasetup(maintopic,preprocesstopic):
                                     myname,myemail,mylocation,description,enabletls,
                                     brokerhost,brokerport,numpartitions,replication,
                                     microserviceid)
+     
+     # Check if additional_topics are provided and create them as well
+     if additional_topics:
+        for topic_name in additional_topics:
+            result = maadstml.vipercreatetopic(VIPERTOKEN, VIPERHOST, VIPERPORT, topic_name, companyname,
+                                              myname, myemail, mylocation, description, enabletls,
+                                              brokerhost, brokerport, numpartitions, replication,
+                                              microserviceid)
          
      return tn,pid
 
@@ -141,8 +149,8 @@ def sendtransactiondata(maintopic,mainproducerid,VIPERPORT,index,preprocesstopic
       # here we will take max values of the arcturus-humidity, we will Diff arcturus-temperature, and average arcturus-Light_Intensity
       # NOTE: The number of process logic functions MUST match the streams - the operations will be applied in the same order
 #
-#     preprocesslogic='min,max,avg,diff,outliers,variance,anomprob,varied,outliers2-5,anomprob2-5,anomprob3,gm,hm,trend,IQR,trimean,spikedetect,cv,skewness,kurtosis'
-     preprocesslogic='anomprob,outliers,consistency,variance,max,avg,diff,diffmargin,trend,min'
+     preprocesslogic='min,max,avg,diff,outliers,variance,anomprob,varied,outliers2-5,anomprob2-5,anomprob3,gm,hm,trend,IQR,trimean,spikedetect,cv,skewness,kurtosis,stddev,range'
+#     preprocesslogic='anomprob,outliers,consistency,variance,max,avg,diff,diffmargin,trend,min'
 
      preprocessconditions='arcturus-temperature_preprocessed_Diff'
      
@@ -165,9 +173,7 @@ def sendtransactiondata(maintopic,mainproducerid,VIPERPORT,index,preprocesstopic
      
      from datetime import datetime, timedelta
      
-     # Calculate the timestamp for 5 minutes ago
-     five_minutes_ago = datetime.now() - timedelta(minutes=5)
-     timestamp_for_filter = five_minutes_ago.isoformat()
+     
 
      #jsoncriteria='uid=subject.reference,filter:resourceType=Observation~\
 #subtopics=code.coding.0.code,component.0.code.coding.0.code,component.1.code.coding.0.code~\
@@ -181,7 +187,7 @@ def sendtransactiondata(maintopic,mainproducerid,VIPERPORT,index,preprocesstopic
  
 #	  // check for payload  'uid=subject.reference,filter:resourceType=MedicationAdministration,payload=payload.payload~\
 
-     jsoncriteria='uid=metadata.dsn,filter:allrecords,datetime>={timestamp_for_filter}~\
+     jsoncriteria='uid=metadata.dsn,filter:allrecords,\
 subtopics=metadata.property_name~\
 values=datapoint.value~\
 identifiers=metadata.display_name~\
@@ -236,8 +242,9 @@ latlong=lat:long'
 
 maintopic='iot-mainstream'
 preprocesstopic='iot-preprocess'
+additional_topics = ['topic1', 'topic2']
 
-maintopic,producerid=datasetup(maintopic,preprocesstopic)
+maintopic,producerid=datasetup(maintopic,preprocesstopic,additional_topics=additional_topics)
 print(maintopic,producerid)
 
 async def startviper():
