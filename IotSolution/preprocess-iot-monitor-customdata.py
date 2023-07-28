@@ -111,6 +111,9 @@ def datasetup(maintopic,preprocesstopic):
          
      return tn,pid
 
+def extract_preprocess_logic(jsoncriteria):
+    preprocess_conditions = jsoncriteria.split("~")[7].split("=")[1]
+    return preprocess_conditions
 
 def sendtransactiondata(maintopic,mainproducerid,VIPERPORT,index,preprocesstopic):
 
@@ -145,7 +148,7 @@ def sendtransactiondata(maintopic,mainproducerid,VIPERPORT,index,preprocesstopic
 #     preprocesslogic='anomprob,outliers,consistency,variance,max,avg,diff,diffmargin,trend,min'
 
      
-     preprocessconditions = 'diff,outliers,variance'
+     preprocessconditions = 'arcturus-humidity_preprocessed_Max,arcturus-temperature_preprocessed_Diff,arcturus-Light_Intensity_preprocessed_Avg'
 
      
       # You can access these new preprocessed topics as:
@@ -181,8 +184,9 @@ def sendtransactiondata(maintopic,mainproducerid,VIPERPORT,index,preprocesstopic
  
 #	  // check for payload  jsoncriteria= 'uid=subject.reference,filter:resourceType=MedicationAdministration,payload=payload.payload~\'
 
+     #jsoncriteria = 'uid=metadata.dsn,filter:allrecords~subtopics=metadata.property_name~values=datapoint.value,arcturus-temperature_preprocessed_Diff~identifiers=metadata.display_name~datetime=datapoint.updated_at~msgid=datapoint.id~latlong=entry.1.resource.position.latitude:entry.1.resource.position.longitude~preprocessconditions=arcturus-temperature_preprocessed_Diff > 5'
      jsoncriteria = 'uid=metadata.dsn,filter:allrecords~subtopics=metadata.property_name~values=datapoint.value,arcturus-temperature_preprocessed_Diff~identifiers=metadata.display_name~datetime=datapoint.updated_at~msgid=datapoint.id~latlong=entry.1.resource.position.latitude:entry.1.resource.position.longitude~preprocessconditions=arcturus-temperature_preprocessed_Diff > 5'
-
+    
           
 #     jsoncriteria='uid=metadata.dsn,filter:allrecords,\
 #subtopics=metadata.property_name~\
@@ -218,11 +222,25 @@ def sendtransactiondata(maintopic,mainproducerid,VIPERPORT,index,preprocesstopic
 #     preprocesslogic='dataage_1_minute' # millisecond,second,minute,hour,day
 #     preprocesslogic='dataage_1_second' # millisecond,second,minute,hour,day
 #     preprocesslogic='dataage_1_millisecond' # millisecond,second,minute,hour,day
-     preprocesslogic='dataage_1_minute,anomprob,trend,avg,stddev,range' # millisecond,second,minute,hour,day
+     preprocesslogic='extract_preprocess_logic(jsoncriteria),dataage_1_minute,anomprob,trend,avg,stddev,range' # millisecond,second,minute,hour,day
+     #preprocess_logic = 'extract_preprocess_logic(jsoncriteria),dataage_1_minute,anomprob,trend,avg,stddev,range'
      
      pathtotmlattrs='oem=id,lat=subject.reference,long=component.0.code.coding.0.display,location=component.1.valueQuantity.value'     
-#     pathtotmlattrs='oem=n/a,lat=n/a,long=n/a,location=n/a,identifier=n/a'     
-     
+#     pathtotmlattrs='oem=n/a,lat=n/a,long=n/a,location=n/a,identifier=n/a'  
+
+
+ 
+     streams = ['arcturus-humidity', 'arcturus-temperature', 'arcturus-Light_Intensity']
+
+     stream_preprocess_map = dict(zip(streams, preprocesslogic))
+   
+   
+     for stream in streams:
+          stream_preprocess = stream_preprocess_map.get(stream)
+          if stream_preprocess:
+               print(f"Preprocessing {stream} with: {stream_preprocess}")
+          else:
+               print(f"No preprocessing logic found for {stream}")     
      try:
         result=maadstml.viperpreprocesscustomjson(VIPERTOKEN,VIPERHOST,VIPERPORT,topic,producerid,offset,jsoncriteria,rawdataoutput,maxrows,enabletls,delay,brokerhost,
                                           brokerport,microserviceid,topicid,streamstojoin,preprocesslogic,preprocessconditions,identifier,
