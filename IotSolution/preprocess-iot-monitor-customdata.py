@@ -144,7 +144,7 @@ def sendtransactiondata(maintopic,mainproducerid,VIPERPORT,index,preprocesstopic
      preprocesslogic='min,max,avg,diff,outliers,variance,anomprob,varied,outliers2-5,anomprob2-5,anomprob3,gm,hm,trend,IQR,trimean,spikedetect,cv,skewness,kurtosis,stddev,range'
 #     preprocesslogic='anomprob,outliers,consistency,variance,max,avg,diff,diffmargin,trend,min'
 
-     preprocessconditions='arcturus-temperature_preprocessed_Diff,arcturus-Light_Intensity_preprocessed_Avg'
+     preprocessconditions='arcturus-temperature_preprocessed_Diff'
      
       # You can access these new preprocessed topics as:
       #   arcturus-humidity_preprocessed_Max
@@ -179,7 +179,7 @@ def sendtransactiondata(maintopic,mainproducerid,VIPERPORT,index,preprocesstopic
  
 #	  // check for payload  jsoncriteria= 'uid=subject.reference,filter:resourceType=MedicationAdministration,payload=payload.payload~\'
 
-     jsoncriteria = 'uid=metadata.dsn,filter:resourceType=MedicationAdministration,payload=payload.payload~subtopics=metadata.property_name,arcturus-temperature_preprocessed_Diff~values=datapoint.value,temperature_diff~preprocessconditions=temperature_diff > 5~identifiers=metadata.display_name~datetime=datapoint.updated_at~msgid=datapoint.id~latlong=entry.1.resource.position.latitude:entry.1.resource.position.longitude'
+     jsoncriteria = 'uid=metadata.dsn,filter:allrecords~subtopics=metadata.property_name~values=datapoint.value,arcturus-temperature_preprocessed_Diff~identifiers=metadata.display_name~datetime=datapoint.updated_at~msgid=datapoint.id~latlong=entry.1.resource.position.latitude:entry.1.resource.position.longitude~preprocessconditions=arcturus-temperature_preprocessed_Diff > 5'
 
           
 #     jsoncriteria='uid=metadata.dsn,filter:allrecords,\
