@@ -162,6 +162,10 @@ def sendtransactiondata(maintopic,mainproducerid,VIPERPORT,index,preprocesstopic
      rawdataoutput=1
      asynctimeout=120
      timedelay=0
+     
+     # Calculate the timestamp for 5 minutes ago
+     five_minutes_ago = datetime.now() - timedelta(minutes=5)
+     timestamp_for_filter = five_minutes_ago.isoformat()
 
      #jsoncriteria='uid=subject.reference,filter:resourceType=Observation~\
 #subtopics=code.coding.0.code,component.0.code.coding.0.code,component.1.code.coding.0.code~\
@@ -175,7 +179,7 @@ def sendtransactiondata(maintopic,mainproducerid,VIPERPORT,index,preprocesstopic
  
 #	  // check for payload  'uid=subject.reference,filter:resourceType=MedicationAdministration,payload=payload.payload~\
 
-     jsoncriteria='uid=metadata.dsn,filter:allrecords~\
+     jsoncriteria='uid=metadata.dsn,filter:allrecords,datetime>={timestamp_for_filter}~\
 subtopics=metadata.property_name~\
 values=datapoint.value~\
 identifiers=metadata.display_name~\
@@ -202,7 +206,7 @@ latlong=lat:long'
      identifier = "IoT device performance and failures"
 
      # if dataage - use:dataage_utcoffset_timetype
-     preprocesslogic='anomprob,trend,avg'
+     preprocesslogic='anomprob,trend,avg,stddev,range'
      #preprocesslogic='dataage_-4_day,trend,min,max' # millisecond,second,minute,hour,day
      #preprocesslogic='dataage_-4_hour' # millisecond,second,minute,hour,day
 #     preprocesslogic='dataage_1_minute' # millisecond,second,minute,hour,day
@@ -240,7 +244,7 @@ async def startviper():
         while True:
           try:   
             sendtransactiondata(maintopic,producerid,VIPERPORT,-1,preprocesstopic)            
-            time.sleep(1)
+          #  time.sleep(1)
           except Exception as e:
             print("ERROR:",e)
             continue
