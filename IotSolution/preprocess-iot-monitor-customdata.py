@@ -144,7 +144,10 @@ def sendtransactiondata(maintopic,mainproducerid,VIPERPORT,index,preprocesstopic
      preprocesslogic='min,max,avg,diff,outliers,variance,anomprob,varied,outliers2-5,anomprob2-5,anomprob3,gm,hm,trend,IQR,trimean,spikedetect,cv,skewness,kurtosis,stddev,range'
 #     preprocesslogic='anomprob,outliers,consistency,variance,max,avg,diff,diffmargin,trend,min'
 
-     preprocessconditions='Voltage > 100, Current > 0.5'
+    # preprocessconditions='arcturus-temperature_preprocessed_Diff >= now -1h'
+     
+     preprocessconditions = 'temperature.apply(lambda x: (x - temperature.min()) / (temperature.max() - temperature.min()))'
+
      
       # You can access these new preprocessed topics as:
       #   arcturus-humidity_preprocessed_Max
