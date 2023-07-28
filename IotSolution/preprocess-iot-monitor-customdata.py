@@ -178,15 +178,17 @@ def sendtransactiondata(maintopic,mainproducerid,VIPERPORT,index,preprocesstopic
  # This is type Collections
  
 #	  // check for payload  jsoncriteria= 'uid=subject.reference,filter:resourceType=MedicationAdministration,payload=payload.payload~\'
+
+     jsoncriteria = 'uid=metadata.dsn,filter:resourceType=MedicationAdministration,payload=payload.payload~subtopics=metadata.property_name,arcturus-temperature_preprocessed_Diff~values=datapoint.value,temperature_diff~preprocessconditions=temperature_diff > 5~identifiers=metadata.display_name~datetime=datapoint.updated_at~msgid=datapoint.id~latlong=entry.1.resource.position.latitude:entry.1.resource.position.longitude'
+
           
-     jsoncriteria='uid=metadata.dsn,filter:allrecords,subject.reference,filter:resourceType=MedicationAdministration,payload=payload.payload~\
-subtopics=metadata.property_name,temperature_diff~\
-values=datapoint.value,arcturus-temperature_preprocessed_Diff~\
-preprocessconditions=temperature_diff > 5~\
-identifiers=metadata.display_name~\
-datetime=datapoint.updated_at~\
-msgid=datapoint.id~\
-latlong=entry.1.resource.position.latitude:entry.1.resource.position.longitude'
+#     jsoncriteria='uid=metadata.dsn,filter:allrecords,\
+#subtopics=metadata.property_name~\
+#values=datapoint.value~\
+#identifiers=metadata.display_name~\
+#datetime=datapoint.updated_at~\
+#msgid=datapoint.id~\
+#latlong=entry.1.resource.position.latitude:entry.1.resource.position.longitude
 #latlong=lat:long'     
 
 #     jsoncriteria='uid=entry.0.resource.id,filter:allrecords~\
