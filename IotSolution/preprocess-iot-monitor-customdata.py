@@ -179,7 +179,7 @@ def sendtransactiondata(maintopic,mainproducerid,VIPERPORT,index,preprocesstopic
  
 #	  // check for payload  jsoncriteria= 'uid=subject.reference,filter:resourceType=MedicationAdministration,payload=payload.payload~\'
 
-     jsoncriteria = 'uid=metadata.dsn,filter:allrecords~subtopics=metadata.property_name~values=datapoint.value,arcturus-temperature_preprocessed_Diff~identifiers=metadata.display_name~datetime=datapoint.updated_at~msgid=datapoint.id~latlong=entry.1.resource.position.latitude:entry.1.resource.position.longitude~preprocessconditions=arcturus-temperature_preprocessed_Diff > 5'
+     jsoncriteria = 'uid=metadata.dsn,filter:allrecords~subtopics=metadata.property_name,arcturus-temperature_preprocessed_Diff~values=datapoint.value,arcturus-temperature_preprocessed_Diff~identifiers=metadata.display_name~datetime=datapoint.updated_at~msgid=datapoint.id~latlong=entry.1.resource.position.latitude:entry.1.resource.position.longitude'
 
           
 #     jsoncriteria='uid=metadata.dsn,filter:allrecords,\
