@@ -22,7 +22,6 @@ nest_asyncio.apply()
 import datetime
 import time
 import os
-import re
 
 basedir = os.environ['userbasedir'] 
 
@@ -112,19 +111,6 @@ def datasetup(maintopic,preprocesstopic):
          
      return tn,pid
 
-def extract_temperature_from_jsoncriteria(jsoncriteria):
-    # Find the part of jsoncriteria containing 'arcturus-temperature_preprocessed_Diff'
-    match = re.search(r'arcturus-temperature_preprocessed_Diff[^~]*', jsoncriteria)
-    if match:
-        temperature_part = match.group(0)
-        
-        # Extract the temperature value from the temperature_part
-        temperature_match = re.search(r'(?<=~values=)\S+', temperature_part)
-        if temperature_match:
-            temperature_value = temperature_match.group(0)
-            return temperature_value
-    return None
-
 
 def sendtransactiondata(maintopic,mainproducerid,VIPERPORT,index,preprocesstopic):
 
@@ -159,11 +145,9 @@ def sendtransactiondata(maintopic,mainproducerid,VIPERPORT,index,preprocesstopic
 #     preprocesslogic='anomprob,outliers,consistency,variance,max,avg,diff,diffmargin,trend,min'
 
      
-     #preprocessconditions = 'diff,outliers,variance'
-     preprocessconditions = 'arcturus-temperature_preprocessed_Diff > 5'
+     preprocessconditions = 'diff,outliers,variance'
+
      
-
-
       # You can access these new preprocessed topics as:
       #   arcturus-humidity_preprocessed_Max
       #   arcturus-temperature_preprocessed_Diff
@@ -222,7 +206,7 @@ def sendtransactiondata(maintopic,mainproducerid,VIPERPORT,index,preprocesstopic
      
      usemysql=1
 
-     streamstojoin="Current,Voltage,Power,Temperature"
+     streamstojoin="Current,Voltage,Power"
 #     streamstojoin=""
  
      identifier = "IoT device performance and failures"
@@ -238,13 +222,6 @@ def sendtransactiondata(maintopic,mainproducerid,VIPERPORT,index,preprocesstopic
      
      pathtotmlattrs='oem=id,lat=subject.reference,long=component.0.code.coding.0.display,location=component.1.valueQuantity.value'     
 #     pathtotmlattrs='oem=n/a,lat=n/a,long=n/a,location=n/a,identifier=n/a'     
-
-     temperature_value = extract_temperature_from_jsoncriteria(jsoncriteria)
-
-     if temperature_value:
-            print(f"The temperature value is: {temperature_value}")
-     else:
-        print("Temperature value not found in jsoncriteria.")
      
      try:
         result=maadstml.viperpreprocesscustomjson(VIPERTOKEN,VIPERHOST,VIPERPORT,topic,producerid,offset,jsoncriteria,rawdataoutput,maxrows,enabletls,delay,brokerhost,
