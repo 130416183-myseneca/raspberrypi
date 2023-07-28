@@ -242,6 +242,8 @@ preprocesstopic='iot-preprocess'
 maintopic,producerid=datasetup(maintopic,preprocesstopic)
 print(maintopic,producerid)
 
+preprocessing_counter = 0
+
 #async def startviper():
 
 #        print("Start Request:",datetime.datetime.now())
@@ -282,7 +284,7 @@ def save_to_csv(data):
     except Exception as e:
         print("Error while saving data to CSV:", e) 
    
-preprocessing_counter = 0
+
 
    
 async def spawnvipers():
