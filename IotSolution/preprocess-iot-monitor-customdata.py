@@ -179,7 +179,7 @@ def sendtransactiondata(maintopic,mainproducerid,VIPERPORT,index,preprocesstopic
  
 #	  // check for payload  jsoncriteria= 'uid=subject.reference,filter:resourceType=MedicationAdministration,payload=payload.payload~\'
 
-     jsoncriteria = 'uid=metadata.dsn,filter:allrecords~subtopics=metadata.property_name,arcturus-temperature_preprocessed_Diff~values=datapoint.value,arcturus-temperature_preprocessed_Diff~identifiers=metadata.display_name~datetime=datapoint.updated_at~msgid=datapoint.id~latlong=entry.1.resource.position.latitude:entry.1.resource.position.longitude'
+     jsoncriteria = 'uid=metadata.dsn,filter:allrecords~subtopics=metadata.property_name~values=datapoint.value,arcturus-temperature_preprocessed_Diff~identifiers=metadata.display_name~datetime=datapoint.updated_at~msgid=datapoint.id~latlong=entry.1.resource.position.latitude:entry.1.resource.position.longitude~preprocessconditions=arcturus-temperature_preprocessed_Diff > 5'
 
           
 #     jsoncriteria='uid=metadata.dsn,filter:allrecords,\
@@ -204,8 +204,8 @@ def sendtransactiondata(maintopic,mainproducerid,VIPERPORT,index,preprocesstopic
      
      usemysql=1
 
-#     streamstojoin="Current,Voltage,Power"
-     streamstojoin=""
+     streamstojoin="Current,Voltage,Power"
+#     streamstojoin=""
  
      identifier = "IoT device performance and failures"
 
@@ -225,7 +225,7 @@ def sendtransactiondata(maintopic,mainproducerid,VIPERPORT,index,preprocesstopic
         result=maadstml.viperpreprocesscustomjson(VIPERTOKEN,VIPERHOST,VIPERPORT,topic,producerid,offset,jsoncriteria,rawdataoutput,maxrows,enabletls,delay,brokerhost,
                                           brokerport,microserviceid,topicid,streamstojoin,preprocesslogic,preprocessconditions,identifier,
                                           preprocesstopic,array,saveasarray,timedelay,asynctimeout,usemysql,tmlfilepath,pathtotmlattrs)
-#        time.sleep(.5)
+        time.sleep(.5)
         print(result)
         return result
      except Exception as e:
@@ -242,50 +242,16 @@ preprocesstopic='iot-preprocess'
 maintopic,producerid=datasetup(maintopic,preprocesstopic)
 print(maintopic,producerid)
 
-preprocessing_counter = 0
-
-#async def startviper():
-
-#        print("Start Request:",datetime.datetime.now())
-#        while True:
-#          try:   
-#            sendtransactiondata(maintopic,producerid,VIPERPORT,-1,preprocesstopic)            
-#          #  time.sleep(1)
-#          except Exception as e:
-#            print("ERROR:",e)
-#            continue
-   
 async def startviper():
-    global preprocessing_counter  # Access the global counter variable
-    print("Start Request:", datetime.datetime.now())
-    while True:
-        try:   
-            preprocessing_counter += 1  # Increment the counter
-            start_time = time.time()  # Record the start time
-            result = sendtransactiondata(maintopic, producerid, VIPERPORT, -1, preprocesstopic)
-            end_time = time.time()  # Record the end time
-            time_taken = end_time - start_time
-            print(f"Data preprocessing iteration {preprocessing_counter} completed.")
-            print("Time taken:", time_taken, "seconds")
 
-            # Save the preprocessed data to a CSV file
-            save_to_csv(result)
-
-        except Exception as e:
-            print("ERROR:", e)
+        print("Start Request:",datetime.datetime.now())
+        while True:
+          try:   
+            sendtransactiondata(maintopic,producerid,VIPERPORT,-1,preprocesstopic)            
+          #  time.sleep(1)
+          except Exception as e:
+            print("ERROR:",e)
             continue
-
-def save_to_csv(data):
-    try:
-        df = pd.read_json(data)
-        csv_file_name = "preprocessed_data.csv"
-        df.to_csv(csv_file_name, index=False)
-        print("Preprocessed data saved to", csv_file_name)
-    except Exception as e:
-        print("Error while saving data to CSV:", e) 
-   
-
-
    
 async def spawnvipers():
 
