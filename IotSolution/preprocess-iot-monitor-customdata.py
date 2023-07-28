@@ -242,16 +242,48 @@ preprocesstopic='iot-preprocess'
 maintopic,producerid=datasetup(maintopic,preprocesstopic)
 print(maintopic,producerid)
 
-async def startviper():
+#async def startviper():
 
-        print("Start Request:",datetime.datetime.now())
-        while True:
-          try:   
-            sendtransactiondata(maintopic,producerid,VIPERPORT,-1,preprocesstopic)            
-          #  time.sleep(1)
-          except Exception as e:
-            print("ERROR:",e)
+#        print("Start Request:",datetime.datetime.now())
+#        while True:
+#          try:   
+#            sendtransactiondata(maintopic,producerid,VIPERPORT,-1,preprocesstopic)            
+#          #  time.sleep(1)
+#          except Exception as e:
+#            print("ERROR:",e)
+#            continue
+   
+async def startviper():
+    global preprocessing_counter  # Access the global counter variable
+    print("Start Request:", datetime.datetime.now())
+    while True:
+        try:   
+            preprocessing_counter += 1  # Increment the counter
+            start_time = time.time()  # Record the start time
+            result = sendtransactiondata(maintopic, producerid, VIPERPORT, -1, preprocesstopic)
+            end_time = time.time()  # Record the end time
+            time_taken = end_time - start_time
+            print(f"Data preprocessing iteration {preprocessing_counter} completed.")
+            print("Time taken:", time_taken, "seconds")
+
+            # Save the preprocessed data to a CSV file
+            save_to_csv(result)
+
+        except Exception as e:
+            print("ERROR:", e)
             continue
+
+def save_to_csv(data):
+    try:
+        df = pd.read_json(data)
+        csv_file_name = "preprocessed_data.csv"
+        df.to_csv(csv_file_name, index=False)
+        print("Preprocessed data saved to", csv_file_name)
+    except Exception as e:
+        print("Error while saving data to CSV:", e) 
+   
+preprocessing_counter = 0
+
    
 async def spawnvipers():
 

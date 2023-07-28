@@ -11,7 +11,7 @@
 import maadstml
 
 # Uncomment IF using Jupyter notebook 
-#import nest_asyncio
+import nest_asyncio
 
 import json
 import numpy as np
