@@ -15,18 +15,18 @@ command will force Docker to used the cached layers:
 ARG CACHEBUST=1
 
 2. Change your Docker build command to:
-docker build -t <container name> --build-arg CHIP=<chip arch> --build-arg CACHEBUST=$(date +%s) --network=host .
+docker build -t 130416183-pjbantigue/seneca-iot-tml-kafka-amd64 --build-arg CHIP=AMD64 --build-arg CACHEBUST=$(date +%s) --network=host .
 
 Docker Tag: docker tag <container id>
-Docker Run: docker run -p 9005:<viperviz port> <container name>
+Docker Run: docker run -p 9005:9005 130416183-pjbantigue/seneca-iot-tml-kafka-amd64
 Replace <container id> with container id or name. Replace <viperviz port> with port viperviz is listening; do the following:
-1. go into the container: docker exec -it <mycontainer> bash
+1. go into the container: docker exec -it 130416183-pjbantigue/seneca-iot-tml-kafka-amd64 bash
 2. run: tmux ls
 3. run: tmux a -t viperviz-visualization-9005
-4. Note: the port in step 3 - this is the <viperviz port>.
+4. Note: the port in step 3 - this is the 9005.
 5. exit TMUX: ctlr + B + D 
-6. Exec: docker run -d --net=host <container name> (for linux)
-6.1 For windows WSL: docker run -p 9005:9005 <container name>
+6. Exec: docker run -d --net=host 130416183-pjbantigue/seneca-iot-tml-kafka-amd64 (for linux)
+6.1 For windows WSL: docker run -p 9005:9005 130416183-pjbantigue/seneca-iot-tml-kafka-amd64
 
 Visualization Access: http://localhost:9005/iot-failure-seneca.html?topic=iot-preprocess2,iot-preprocess&offset=-1&groupid=&rollbackoffset=500&topictype=prediction&append=0&secure=1
 

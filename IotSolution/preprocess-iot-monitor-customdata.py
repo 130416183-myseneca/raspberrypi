@@ -142,9 +142,9 @@ def sendtransactiondata(maintopic,mainproducerid,VIPERPORT,index,preprocesstopic
       # NOTE: The number of process logic functions MUST match the streams - the operations will be applied in the same order
 #
 #     preprocesslogic='min,max,avg,diff,outliers,variance,anomprob,varied,outliers2-5,anomprob2-5,anomprob3,gm,hm,trend,IQR,trimean,spikedetect,cv,skewness,kurtosis'
-#     preprocesslogic='anomprob,outliers,consistency,variance,max,avg,diff,diffmargin,trend,min'
+     preprocesslogic='anomprob,outliers,consistency,variance,max,avg,diff,diffmargin,trend,min'
 
-     preprocessconditions=''
+     preprocessconditions='arcturus-temperature_preprocessed_Diff'
      
       # You can access these new preprocessed topics as:
       #   arcturus-humidity_preprocessed_Max
@@ -162,6 +162,8 @@ def sendtransactiondata(maintopic,mainproducerid,VIPERPORT,index,preprocesstopic
      rawdataoutput=1
      asynctimeout=120
      timedelay=0
+     
+     from datetime import datetime, timedelta
      
      # Calculate the timestamp for 5 minutes ago
      five_minutes_ago = datetime.now() - timedelta(minutes=5)

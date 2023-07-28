@@ -163,6 +163,8 @@ def sendtransactiondata(maintopic,mainproducerid,VIPERPORT,index,preprocesstopic
      asynctimeout=120
      timedelay=0
      
+     from datetime import datetime, timedelta
+     
      # Calculate the timestamp for 5 minutes ago
      five_minutes_ago = datetime.now() - timedelta(minutes=5)
      timestamp_for_filter = five_minutes_ago.isoformat()
@@ -179,13 +181,13 @@ def sendtransactiondata(maintopic,mainproducerid,VIPERPORT,index,preprocesstopic
  
 #	  // check for payload  'uid=subject.reference,filter:resourceType=MedicationAdministration,payload=payload.payload~\
 
-     jsoncriteria='uid=metadata.dsn,filter:allrecords,datetime>={timestamp_for_filter}~\
-subtopics=metadata.property_name~\
-values=datapoint.value~\
-identifiers=metadata.display_name~\
-datetime=datapoint.updated_at~\
-msgid=datapoint.id~\
-latlong=lat:long'     
+     jsoncriteria=f"uid=metadata.dsn,filter:allrecords,datetime>={timestamp_for_filter}~\
+                subtopics=metadata.property_name~\
+                values=datapoint.value~\
+                identifiers=metadata.display_name~\
+                datetime=datapoint.updated_at~\
+                msgid=datapoint.id~\
+                latlong=lat:long"     
 
 #     jsoncriteria='uid=entry.0.resource.id,filter:allrecords~\
 #subtopics=entry.1.resource.type.0.coding.0.code~\
