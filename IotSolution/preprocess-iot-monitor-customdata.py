@@ -56,7 +56,7 @@ if VIPERHOST=="":
 #                                     CREATE TOPICS IN KAFKA
 
 # Set personal data
-def datasetup(maintopic,preprocesstopic,):
+def datasetup(maintopic,preprocesstopic):
      companyname="Seneca"
      myname="Patrick"
      myemail="pjbantigue@myseneca.ca"
@@ -108,14 +108,6 @@ def datasetup(maintopic,preprocesstopic,):
                                     myname,myemail,mylocation,description,enabletls,
                                     brokerhost,brokerport,numpartitions,replication,
                                     microserviceid)
-     
-     # Check if additional_topics are provided and create them as well
-     if additional_topics:
-        for topic_name in additional_topics:
-            result = maadstml.vipercreatetopic(VIPERTOKEN, VIPERHOST, VIPERPORT, topic_name, companyname,
-                                              myname, myemail, mylocation, description, enabletls,
-                                              brokerhost, brokerport, numpartitions, replication,
-                                              microserviceid)
          
      return tn,pid
 
@@ -152,7 +144,7 @@ def sendtransactiondata(maintopic,mainproducerid,VIPERPORT,index,preprocesstopic
      preprocesslogic='min,max,avg,diff,outliers,variance,anomprob,varied,outliers2-5,anomprob2-5,anomprob3,gm,hm,trend,IQR,trimean,spikedetect,cv,skewness,kurtosis,stddev,range'
 #     preprocesslogic='anomprob,outliers,consistency,variance,max,avg,diff,diffmargin,trend,min'
 
-     preprocessconditions='arcturus-temperature_preprocessed_Diff'
+     preprocessconditions='arcturus-temperature_preprocessed_Diff,arcturus-Light_Intensity_preprocessed_Avg'
      
       # You can access these new preprocessed topics as:
       #   arcturus-humidity_preprocessed_Max
@@ -175,25 +167,25 @@ def sendtransactiondata(maintopic,mainproducerid,VIPERPORT,index,preprocesstopic
      
      
 
-     #jsoncriteria='uid=subject.reference,filter:resourceType=Observation~\
-#subtopics=code.coding.0.code,component.0.code.coding.0.code,component.1.code.coding.0.code~\
-#values=valueQuantity.value,component.0.valueQuantity.value,component.1.valueQuantity.value~\
-#identifiers=code.coding.0.display,component.0.code.coding.0.display,component.1.code.coding.0.display~\
-#datetime=effectiveDateTime~\
-#msgid=id~\
-#latlong='
+     jsoncriteria='uid=subject.reference,filter:resourceType=Observation~\
+subtopics=code.coding.0.code,component.0.code.coding.0.code,component.1.code.coding.0.code~\
+values=valueQuantity.value,component.0.valueQuantity.value,component.1.valueQuantity.value~\
+identifiers=code.coding.0.display,component.0.code.coding.0.display,component.1.code.coding.0.display~\
+datetime=effectiveDateTime~\
+msgid=id~\
+latlong='
 
  # This is type Collections
  
-#	  // check for payload  'uid=subject.reference,filter:resourceType=MedicationAdministration,payload=payload.payload~\
-
-     jsoncriteria='uid=metadata.dsn,filter:allrecords,\
-subtopics=metadata.property_name~\
-values=datapoint.value~\
-identifiers=metadata.display_name~\
-datetime=datapoint.updated_at~\
-msgid=datapoint.id~\
-latlong=lat:long'     
+#	  // check for payload  jsoncriteria= 'uid=subject.reference,filter:resourceType=MedicationAdministration,payload=payload.payload~\'
+          
+#     jsoncriteria='uid=metadata.dsn,filter:allrecords,\
+#subtopics=metadata.property_name~\
+#values=datapoint.value~\
+#identifiers=metadata.display_name~\
+#datetime=datapoint.updated_at~\
+#msgid=datapoint.id~\
+#latlong=lat:long'     
 
 #     jsoncriteria='uid=entry.0.resource.id,filter:allrecords~\
 #subtopics=entry.1.resource.type.0.coding.0.code~\
@@ -242,9 +234,8 @@ latlong=lat:long'
 
 maintopic='iot-mainstream'
 preprocesstopic='iot-preprocess'
-additional_topics = ['topic1', 'topic2']
 
-maintopic,producerid=datasetup(maintopic,preprocesstopic,additional_topics=additional_topics)
+maintopic,producerid=datasetup(maintopic,preprocesstopic)
 print(maintopic,producerid)
 
 async def startviper():
