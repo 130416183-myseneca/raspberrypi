@@ -222,7 +222,7 @@ def sendtransactiondata(maintopic,mainproducerid,VIPERPORT,index,preprocesstopic
      
      usemysql=1
 
-     streamstojoin="Current,Voltage,Power"
+     streamstojoin="Current,Voltage,Power,Temperature"
 #     streamstojoin=""
  
      identifier = "IoT device performance and failures"
