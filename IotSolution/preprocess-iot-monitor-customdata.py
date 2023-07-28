@@ -179,13 +179,15 @@ def sendtransactiondata(maintopic,mainproducerid,VIPERPORT,index,preprocesstopic
  
 #	  // check for payload  jsoncriteria= 'uid=subject.reference,filter:resourceType=MedicationAdministration,payload=payload.payload~\'
           
-     jsoncriteria='uid=metadata.dsn,filter:allrecords,\
-subtopics=metadata.property_name~\
-values=datapoint.value~\
+     jsoncriteria='uid=metadata.dsn,filter:allrecords,subject.reference,filter:resourceType=MedicationAdministration,payload=payload.payload~\
+subtopics=metadata.property_name,temperature_diff~\
+values=datapoint.value,arcturus-temperature_preprocessed_Diff~\
+preprocessconditions=temperature_diff > 5~\
 identifiers=metadata.display_name~\
 datetime=datapoint.updated_at~\
 msgid=datapoint.id~\
-latlong=lat:long'     
+latlong=entry.1.resource.position.latitude:entry.1.resource.position.longitude'
+#latlong=lat:long'     
 
 #     jsoncriteria='uid=entry.0.resource.id,filter:allrecords~\
 #subtopics=entry.1.resource.type.0.coding.0.code~\
@@ -207,12 +209,12 @@ latlong=lat:long'
 
      # if dataage - use:dataage_utcoffset_timetype
       #preprocesslogic='anomprob,trend,avg,stddev,range'
-     preprocesslogic='dataage_-4_day,trend,min,max' # millisecond,second,minute,hour,day
+     #preprocesslogic='dataage_-4_day,trend,min,max' # millisecond,second,minute,hour,day
      #preprocesslogic='dataage_-4_hour' # millisecond,second,minute,hour,day
 #     preprocesslogic='dataage_1_minute' # millisecond,second,minute,hour,day
 #     preprocesslogic='dataage_1_second' # millisecond,second,minute,hour,day
 #     preprocesslogic='dataage_1_millisecond' # millisecond,second,minute,hour,day
-
+     preprocesslogic='dataage_1_minute,anomprob,trend,avg,stddev,range' # millisecond,second,minute,hour,day
      
      pathtotmlattrs='oem=id,lat=subject.reference,long=component.0.code.coding.0.display,location=component.1.valueQuantity.value'     
 #     pathtotmlattrs='oem=n/a,lat=n/a,long=n/a,location=n/a,identifier=n/a'     
