@@ -19,6 +19,7 @@ docker build -t assignment2-tml-data --build-arg CHIP=AMD64 --build-arg CACHEBUS
 
 Docker Tag: docker tag <container id>
 Docker Run: docker run -p 9005:9005 assignment2-tml-data
+docker run -p 9005:9005 assignment2-tml-data-seneca:latest
 Replace <container id> with container id or name. Replace <viperviz port> with port viperviz is listening; do the following:
 1. go into the container: docker exec -it 130416183-pjbantigue/seneca-iot-tml-kafka-amd64 bash
 2. run: tmux ls
