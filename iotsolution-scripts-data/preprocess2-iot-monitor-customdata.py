@@ -54,9 +54,9 @@ if VIPERHOST=="":
 
 # Set personal data
 def datasetup(maintopic,preprocesstopic):
-     companyname="Seneca"
-     myname="Patrick"
-     myemail="pjbantigue@myseneca.ca"
+     companyname="OTICS"
+     myname="Sebastian"
+     myemail="Sebastian.Maurice"
      mylocation="Toronto"
 
      # Replication factor for Kafka redundancy
@@ -188,5 +188,4 @@ loop.create_task(spawnvipers())
 asyncio.set_event_loop(loop)
 
 loop.run_forever()
-
 
