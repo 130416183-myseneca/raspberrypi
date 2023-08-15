@@ -1,4 +1,3 @@
-
 # Developed by: Sebastian Maurice, PhD
 # Toronto, Ontario Canada
 # OTICS Advanced Analytics
@@ -71,9 +70,9 @@ if VIPERHOST=="":
 
 def setupkafkatopic(topicname):
           # Set personal data
-      companyname="Seneca"
-      myname="Patrick"
-      myemail="pjbantigue@myseneca.ca"
+      companyname="OTICS"
+      myname="Sebastian"
+      myemail="Sebastian.Maurice"
       mylocation="Toronto"
 
       # Replication factor for Kafka redundancy
@@ -145,6 +144,12 @@ def getlatlong(reader,search,key):
   
   return value_at_index['lat'],value_at_index['long'],value_at_index['identifier']
 
+def getlatlong2(reader):
+
+  #print("arr=",reader)
+  random_lines=random.choice(list(reader))
+
+  return random_lines[1],random_lines[2],random_lines[0]
 
 def producetokafka(value, tmlid, identifier,producerid,maintopic,substream):
      
@@ -189,8 +194,10 @@ while True:
   # add lat/long/identifier
 
   #line = line[:-2]
-  jsonline = json.loads(line)
   try:
+    jsonline = json.loads(line)   
+    # YOU CAN REPLACE THIS FUNCTION: getlatlong(reader,jsonline['metadata']['dsn'],'dsn') -----> WITH  getlatlong2(reader) 
+    # fOR EXAMPLE: lat,long,ident=getlatlong2(reader)   
     lat,long,ident=getlatlong(reader,jsonline['metadata']['dsn'],'dsn')
     line = line[:-2] + "," + '"lat":' + lat + ',"long":'+long + ',"identifier":"' + ident + '"}'
     if not line:
